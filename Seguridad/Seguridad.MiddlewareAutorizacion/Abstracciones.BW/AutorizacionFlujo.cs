@@ -12,7 +12,7 @@ namespace Autorizacion.Flujo
     public class AutorizacionFlujo : IAutorizacionFlujo
     {
         private ISeguridadDA _seguridadDA;
-
+        //..
         public AutorizacionFlujo(ISeguridadDA seguridadDA)
         {
             _seguridadDA = seguridadDA;
