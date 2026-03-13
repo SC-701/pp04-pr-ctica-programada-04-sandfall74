@@ -6,8 +6,12 @@ using Abstracciones.Modelos;
 using DA;
 using DA.Repositorio;
 using Flujo;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Reglas;
 using Servicios;
+using System.Text;
+using Autorizacion.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,6 +55,15 @@ builder.Services.AddScoped<IMarcaFlujo, MarcaFlujo>();
 builder.Services.AddScoped<IModeloFlujo, ModeloFlujo>();
 
 
+builder.Services.AddTransient<Autorizacion.Abstracciones.Flujo.IAutorizacionFlujo,
+                               Autorizacion.Flujo.AutorizacionFlujo>();
+builder.Services.AddTransient<Autorizacion.Abstracciones.DA.ISeguridadDA,
+                               Autorizacion.DA.SeguridadDA>();
+builder.Services.AddTransient<Autorizacion.Abstracciones.DA.IRepositorioDapper,
+                               Autorizacion.DA.Repositorios.RepositorioDapper>();
+
+
+
 var politicaAcceso = "Politica de acceso";
 builder.Services.AddCors(options =>
 {
@@ -76,6 +89,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.AutorizacionClaims();  
 app.UseAuthorization();
 
 app.MapControllers();

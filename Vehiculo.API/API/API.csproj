@@ -11,6 +11,7 @@
     <PackageReference Include="Autorizacion.DA.apiedra" Version="1.0.0" />
     <PackageReference Include="Autorizacion.Flujo.apiedra" Version="1.0.0" />
     <PackageReference Include="Autorizacion.Middleware.apiedra" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 

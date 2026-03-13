@@ -1,14 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Abstracciones.Interfaces.API;
-using Abstracciones.Modelos;
+﻿using Abstracciones.Interfaces.API;
 using Abstracciones.Interfaces.Flujo;
+using Abstracciones.Modelos;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [Route("api/vehiculo")]
     [ApiController]
+    [Authorize]
     public class VehiculoController : ControllerBase, IVehiculoController
     {
         private IVehiculoFlujo _vehiculoFlujo;
@@ -20,6 +22,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Agregar([FromBody]VehiculoRequest vehiculo)
         {
             var resultado = await _vehiculoFlujo.Agregar(vehiculo);
@@ -27,6 +30,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Editar([FromRoute]Guid id,  [FromBody]VehiculoRequest vehiculo)
         {
             string mensajeError = "El vehiculo no existe";
@@ -40,6 +44,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Eliminar([FromRoute] Guid id)
         {
             Boolean existeVehiculo = await VerificarExistenciaVehiculo(id);
@@ -53,6 +58,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Obtener()
         {
             var resultado = await _vehiculoFlujo.Obtener();
@@ -63,6 +69,7 @@ namespace API.Controllers
             return Ok(resultado);
         }
         [HttpGet("{id}")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> ObtenerPorId([FromRoute] Guid id)
         {
             var resultado = await _vehiculoFlujo.ObtenerPorId(id);
