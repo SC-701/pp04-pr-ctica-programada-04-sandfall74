@@ -1,19 +1,20 @@
-name: Deploy Producto Database to Azure SQL
+name: Deploy Seguridad Database to Azure SQL
 
 env:
   AZURE_SQL_SERVER: sc7012026m.database.windows.net    # Tu servidor SQL de Azure (ejemplo: vehiculo-db-server.database.windows.net)
   AZURE_SQL_DATABASE: vehiculos    # Nombre de tu base de datos
-  DACPAC_PATH: 'Vehiculo.API/BD/bin/Release/BD.dacpac'
+  DACPAC_PATH: 'Seguridad/Seguridad.API/BD/bin/Release/BD.dacpac'
 
 on:
   push:
     branches: [ "main" ]
     paths:
-      - 'Vehiculo.API/BD/**'
+      - 'Seguridad/Seguridad.API/BD/**'
   workflow_dispatch:
 
 permissions:
   contents: read
+  packages: read
 
 jobs:
   build-and-deploy-database:
@@ -29,13 +30,31 @@ jobs:
 
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1
-
+      - name: Create NuGet.Config with GitHub Packages credentials
+        run: |
+          $content = @"
+          <?xml version="1.0" encoding="utf-8"?>
+          <configuration>
+            <packageSources>
+              <add key="github" value="https://nuget.pkg.github.com/SC-701/index.json" />
+            </packageSources>
+            <packageSourceCredentials>
+              <github>
+                <add key="Username" value="${{ github.actor }}" />
+                <add key="ClearTextPassword" value="${{ secrets.PAQUETES_TOKEN }}" />
+              </github>
+            </packageSourceCredentials>
+          </configuration>
+          "@
+          $content | Out-File -FilePath "Seguridad/Seguridad.API/NuGet.Config" -Encoding utf8
+        shell: powershell
+    
       - name: Restore NuGet packages
-        run: nuget restore "Vehiculo.API/Vehiculo.API.sln"
+        run: nuget restore "Seguridad/Seguridad.API/Seguridad.sln"
 
       - name: Build Database Project
         run: |
-          msbuild "Vehiculo.API/BD/BD.sqlproj" /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath="./bin/Release/"
+          msbuild "Seguridad/Seguridad.API/BD/BD.sqlproj" /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath="./bin/Release/"
         shell: cmd
 
       - name: Verify DACPAC file exists
