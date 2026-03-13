@@ -2,6 +2,7 @@ using Abstracciones.Interfaces.DA;
 using Abstracciones.Interfaces.Flujo;
 using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Interfaces.Servicios;
+using Abstracciones.Modelos;
 using DA;
 using DA.Repositorio;
 using Flujo;
@@ -9,6 +10,24 @@ using Reglas;
 using Servicios;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var tokenConfig = builder.Configuration.GetSection("Token").Get<TokenConfiguracion>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = tokenConfig.Issuer,
+            ValidAudience = tokenConfig.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                                           Encoding.UTF8.GetBytes(tokenConfig.key))
+        };
+    });
+
 
 // Add services to the container.
 
