@@ -1,5 +1,5 @@
 using Abstracciones.Flujo;
-using Abstracciones.DA;
+using Autorizacion.Abstracciones.DA;
 using DA.Repositorios;
 using Flujo;
 using DA;
@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Autorizacion.Middleware;
+using Abstracciones.DA;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,7 +42,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IRepositorioDapper, RepositorioDapper>();
+builder.Services.AddScoped<Abstracciones.DA.IRepositorioDapper, RepositorioDapper>();
 builder.Services.AddScoped<IUsuarioDA, UsuarioDA>();
 builder.Services.AddScoped<IUsuarioFlujo, UsuarioFlujo>();
 builder.Services.AddScoped<IAutenticacionFlujo, AutenticacionFlujo>();
