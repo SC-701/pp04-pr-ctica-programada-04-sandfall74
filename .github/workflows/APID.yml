@@ -53,7 +53,16 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-
+            
+      - name: Configurar NuGet feed privado
+        run: |
+          dotnet nuget add source \
+            "https://nuget.pkg.github.com/SC-701/index.json" \
+            --name "Paquetes" \
+            --username "${{ github.actor }}" \
+            --password "${{ secrets.PAQUETES_TOKEN }}" \
+            --store-password-in-clear-text
+            
       - name: Restore dependencies
         run: |
           cd "Vehiculo.API"
