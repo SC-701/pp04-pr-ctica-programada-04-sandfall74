@@ -30,7 +30,6 @@ namespace Web.Pages.Cuenta
             string endpoint = _configuracion.ObtenerMetodo("ApiEndPointsSeguridad", "Registro");
             var cliente = new HttpClient();
             var respuesta = await cliente.PostAsJsonAsync<UsuarioBase>(endpoint, usuario);
-            respuesta.EnsureSuccessStatusCode();
             return RedirectToPage("../index");
         }
     }

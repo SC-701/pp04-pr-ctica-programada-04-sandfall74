@@ -19,7 +19,7 @@ namespace Web.Pages.Cuenta
     {
         [BindProperty]
         public LoginRequest loginInfo { get; set; } = default!;
-        [BindProperty]
+        
         public Token token { get; set; } = default!;
         private IConfiguracion _configuracion;
 
