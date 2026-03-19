@@ -27,6 +27,15 @@ namespace Web.Pages.Vehiculos
             string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerVehiculos");
             var solicitud = new HttpRequestMessage(HttpMethod.Get,endpoint);
             var respuesta = await cliente.SendAsync(solicitud);
+            if (!respuesta.IsSuccessStatusCode)
+            {
+                // Pon un Punto de Interrupción (Breakpoint) aquí
+                var contenidoError = await respuesta.Content.ReadAsStringAsync();
+                var codigoStatus = respuesta.StatusCode;
+
+                // Esto te dirá exactamente qué dice el servidor (ej: "Usuario no autorizado" o "ID no encontrado")
+                throw new Exception($"Error de API ({codigoStatus}): {contenidoError}");
+            }
             respuesta.EnsureSuccessStatusCode();
             var resultado=await respuesta.Content.ReadAsStringAsync();
             var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
